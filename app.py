@@ -8,6 +8,7 @@ import config
 
 
 from resources.user import user
+from resources.api import api
 
 login_manager = LoginManager()
 
@@ -37,8 +38,10 @@ def after_request(response):
     return response
 
 CORS(user, origin=['http://localhost:3000'], supports_credentials=True)
+CORS(api, origin=['http://localhost:3000'], supports_credentials=True)
 
 app.register_blueprint(user, url_prefix='/api/v1/users')
+app.register_blueprint(api, url_prefix='/api/v1/api')
 
 if __name__ == '__main__':
     models.initialize()
