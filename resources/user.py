@@ -10,17 +10,32 @@ user = Blueprint('users', 'user')
 @user.route('/register', methods=["POST"])
 def register():
     
-    #all the data
+    #all the da
     payload = request.get_json()
     print(payload)
-    payload['email'].lower()
+    payload['signupEmail'].lower()
+    new_user_data = {
+        "firstName": payload['signupFirstName'],
+        "lastName": payload['signupLastName'],
+        "username": payload['signupUserName'],
+        "email": payload['signupEmail'],
+        "location": payload['signupLocation'],
+        "password": generate_password_hash(payload['signupPassword'])
+    }
+    print(new_user_data, "THIS IS THE NEW USER DATA")
     try:
         #finding if the user already exists
-        models.User.get(models.User.email == payload['email'])
+        models.User.get(models.User.email == payload['signupEmail'])
         return jsonify(data={}, status={"code": 401, "message": "A user with that name already exists"})
     except models.DoesNotExist:
-        payload['password'] = generate_password_hash(payload['password'])
-        user = models.User.create(**payload)
+        
+        # payload['firstName'] = payload['signupFirstName']
+        # payload['lastName'] = payload['signupLastName']
+        # payload['username'] = paylod['signupUserName']
+        # payload['email'] = payload['signupEmail']
+        # payload['location'] = payload['signupLocation']
+        # payload['password'] = generate_password_hash(payload['signupPassword'])
+        user = models.User.create(**new_user_data)
         
         #login_user
         login_user(user)
@@ -38,9 +53,9 @@ def login():
     payload = request.get_json()
     print(payload, '<--- the payload')
     try:
-        user = models.User.get(models.User.email== payload['email'])
+        user = models.User.get(models.User.email== payload['loginEmail'])
         user_dict = model_to_dict(user)
-        if(check_password_hash(user_dict['password'], payload['password'])):
+        if(check_password_hash(user_dict['password'], payload['loginPassword'])):
             del user_dict['password']
             login_user(user)
             print(user, ' the user')

@@ -12,7 +12,7 @@ class User(UserMixin, Model):
     location = CharField()
     
     class Meta:
-        database = DATABASE
+        database = DATABASE      
         
 
 def initialize():
