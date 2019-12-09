@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
+
 import models
 import config
 
@@ -17,6 +18,9 @@ app = Flask(__name__)
 
 app.secret_key = config.SECRET_KEY
 login_manager.init_app(app)
+
+
+
 
 @login_manager.user_loader
 def load_user(userId):
