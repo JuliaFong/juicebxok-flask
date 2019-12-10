@@ -1,7 +1,6 @@
 from flask import request, jsonify, Blueprint
 from playhouse.shortcuts import model_to_dict
 
-
 import config
 import requests
 import json

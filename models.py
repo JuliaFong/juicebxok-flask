@@ -10,11 +10,6 @@ class User(UserMixin, Model):
     email = CharField(unique=True)
     password = CharField()
     location = CharField()
-
-    # class Api( Model):
-    #     term = CharField()
-    #     location =CharField()
-
     
     class Meta:
         database = DATABASE      

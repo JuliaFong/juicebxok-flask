@@ -7,6 +7,7 @@ from playhouse.shortcuts import model_to_dict
 
 user = Blueprint('users', 'user')
 
+# CREATE USER ROUTE
 @user.route('/register', methods=["POST"])
 def register():
     
@@ -47,7 +48,8 @@ def register():
         del user_dict['password']
         
         return jsonify(data=user_dict, status={"code": 201, "message": "Success"})
-    
+
+# USER LOGIN ROUTE
 @user.route('/login', methods=["POST"])
 def login():
     payload = request.get_json()
@@ -63,6 +65,25 @@ def login():
     except models.DoesNotExist:
         return jsonify(data={}, status={"code": 401, "message": "Username or Password is incorrect"})
     
+# USER EDIT ROUTE
+@user.route('/<id>', methods=["PUT"])
+def update_user(id):
+    try:
+        payload = request.get_json()
+        query = models.User.update(**payload).where(models.User.id==id)
+        query.execute()
+        return jsonify (data=model_to_dict(models.User.get_by_id(id)), status={"code": 200, "message": "resource is edited"})
+    except models.DoesNotExist:
+        return jsonify(data={}, status={'code': 401, 'message': "User not found."})
+
+# USER DELETE ROUTE
+@user.route('/<id>', methods =["DELETE"])
+def delete_user(id):
+    query = models.User.delete().where(models.User.id==id)
+    query.execute()
+    return jsonify(data='resource deleted', status={"code": 200, "message": "resource is deleted"})
+    
+# USER LOGOUT ROUTE
     @user.route('/logout', methods=["GET"])
     def logout():
         logout_user()
